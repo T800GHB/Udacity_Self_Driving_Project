@@ -14,20 +14,22 @@ import matplotlib.image as mpimg
 
 def GetPerspectiveTransformMatrix(mtx, dist):
     # This region make sense on image size of 720P
-    src_pt1 = (576, 463)
-    src_pt2 = (707, 463)
-    src_pt3 = (1044, 676)
-    src_pt4 = (262, 676)
+    src_pt1 = (580, 460)
+    src_pt2 = (700, 460)
+    src_pt3 = (1096, 720)
+    src_pt4 = (200, 720)
     
-    dst_pt1 = (320, 0)
-    dst_pt2 = (960, 0)
-    dst_pt3 = (960, 719)
-    dst_pt4 = (320, 719)
+    
+    dst_pt1 = (300, 0)
+    dst_pt2 = (950, 0)
+    dst_pt3 = (950, 720)
+    dst_pt4 = (300, 720)
     src_pts = np.float32([src_pt1, src_pt2, src_pt3, src_pt4])
     dst_pts = np.float32([dst_pt1, dst_pt2, dst_pt3, dst_pt4])
     M = cv2.getPerspectiveTransform(src_pts, dst_pts)
+    M_inv = cv2.getPerspectiveTransform(dst_pts, src_pts)
     
-    return M
+    return M, M_inv
 
 def GetPerspectiveTransformImage(file_name, mtx, dist, M):
     img = cv2.imread(file_name)
@@ -40,26 +42,37 @@ def GetPerspectiveTransformImage(file_name, mtx, dist, M):
     
     return warped
 
+def MapPerspectiveTransformImage(img, mtx, dist, M):
+    undistorted_img = cv2.undistort(img, mtx, dist, None, mtx)
+    
+    img_size = (img.shape[1], img.shape[0])
+    
+    warped = cv2.warpPerspective(undistorted_img, M, img_size, flags=cv2.INTER_LINEAR) 
+    
+    return warped, undistorted_img
+
 def DisplayPerspectiveTransform(file_name, mtx, dist):
     img = cv2.imread(file_name)
     
     undistorted_img = cv2.undistort(img, mtx, dist, None, mtx)
-        
-    src_pt1 = (576, 463)
-    src_pt2 = (707, 463)
-    src_pt3 = (1044, 676)
-    src_pt4 = (262, 676)
-    green = (0, 255, 0)
     
-    dst_pt1 = (320, 0)
-    dst_pt2 = (960, 0)
-    dst_pt3 = (960, 719)
-    dst_pt4 = (320, 719)
     img_size = (1280, 720)
+    green = (0, 255, 0)
+    src_pt1 = (580, 460)
+    src_pt2 = (700, 460)
+    src_pt3 = (1096, 720)
+    src_pt4 = (200, 720)
+    
+    
+    dst_pt1 = (300, 0)
+    dst_pt2 = (950, 0)
+    dst_pt3 = (950, 720)
+    dst_pt4 = (300, 720)
     
     src_pts = np.float32([src_pt1, src_pt2, src_pt3, src_pt4])
     dst_pts = np.float32([dst_pt1, dst_pt2, dst_pt3, dst_pt4])
     M = cv2.getPerspectiveTransform(src_pts, dst_pts)
+    
     warped = cv2.warpPerspective(undistorted_img, M, img_size, flags=cv2.INTER_LINEAR) 
     
     
@@ -85,9 +98,3 @@ def DisplayPerspectiveTransform(file_name, mtx, dist):
     plt.subplots_adjust(left=0., right=1, top=0.9, bottom=0.)
     plt.savefig('output_images/calibration_undistorted.png')
         
-
-mtx, dist = camera_calibration.GetCalibrationParameters()
-#DisplayPerspectiveTransform('test_images/straight_lines1.jpg', mtx, dist, True)
-M = GetPerspectiveTransformMatrix(mtx, dist)
-img = GetPerspectiveTransformImage('test_images/straight_lines1.jpg', mtx, dist, M)
-cv2.imwrite('t.jpg',img)

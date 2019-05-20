@@ -24,6 +24,7 @@ def GetCalibrationParameters(show_corners=False, show_undistorted=False):
     
     images = glob.glob('camera_cal/calibration*.jpg')
     show_img = cv2.imread('camera_cal/calibration1.jpg')
+#    show_img = cv2.imread('test_images/straight_lines1.jpg')
     img_size = (show_img.shape[1], show_img.shape[0])
     
     for idx, fname in enumerate(images):
@@ -56,11 +57,11 @@ def GetCalibrationParameters(show_corners=False, show_undistorted=False):
         
         f, (ax1, ax2) = plt.subplots(1, 2, figsize=(24, 9))
         f.tight_layout()
-        ax1.imshow(show_img)
+        ax1.imshow(show_img[...,::-1])
         ax1.set_title('Original Image', fontsize=50)
-        ax2.imshow(undistorted)
+        ax2.imshow(undistorted[...,::-1])
         ax2.set_title('Undistorted Image', fontsize=50)
         plt.subplots_adjust(left=0., right=1, top=0.9, bottom=0.)
-        plt.savefig('output_images/calibration_undistorted.png')
+#        plt.savefig('output_images/calibration_undistorted.png')
         
     return mtx, dist
