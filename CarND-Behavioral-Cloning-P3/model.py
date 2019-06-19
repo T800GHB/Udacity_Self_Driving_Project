@@ -3,17 +3,16 @@ from keras.layers import Dense, Flatten, Lambda, Activation, MaxPooling2D
 from keras.layers.convolutional import Convolution2D
 from keras.models import Sequential
 from keras.optimizers import Adam
+from keras.utils import plot_model
+import assist
 
-import helper
 
 number_of_epochs = 1
-number_of_samples_per_epoch = 20032
-number_of_validation_samples = 6400
+number_of_samples_per_epoch = 19904
+number_of_validation_samples = 6528
 learning_rate = 1e-4
 activation_relu = 'relu'
 
-# Our model is based on NVIDIA's "End to End Learning for Self-Driving Cars" paper
-# Source:  https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf
 model = Sequential()
 
 model.add(Lambda(lambda x: x / 127.5 - 1.0, input_shape=(64, 64, 3)))
@@ -57,12 +56,13 @@ model.add(Activation(activation_relu))
 model.add(Dense(1))
 
 model.summary()
+plot_model(model, to_file='model.png')
 
 model.compile(optimizer=Adam(learning_rate), loss="mse", )
 
 # create two generators for training and validation
-train_gen = helper.generate_next_batch()
-validation_gen = helper.generate_next_batch()
+train_gen = assist.generate_next_batch()
+validation_gen = assist.generate_next_batch()
 
 history = model.fit_generator(train_gen,
                               samples_per_epoch=number_of_samples_per_epoch,
@@ -70,7 +70,7 @@ history = model.fit_generator(train_gen,
                               validation_data=validation_gen,
                               nb_val_samples=number_of_validation_samples,
                               verbose=1)
-
-# finally save our model and weights
-# helper.save_model(model)
 model.save('model.h5')
+
+# Our model is based on NVIDIA's "End to End Learning for Self-Driving Cars" paper
+# Source:  https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf
