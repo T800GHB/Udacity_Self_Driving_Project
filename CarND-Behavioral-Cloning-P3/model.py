@@ -71,6 +71,3 @@ history = model.fit_generator(train_gen,
                               nb_val_samples=number_of_validation_samples,
                               verbose=1)
 model.save('model.h5')
-
-# Our model is based on NVIDIA's "End to End Learning for Self-Driving Cars" paper
-# Source:  https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf
