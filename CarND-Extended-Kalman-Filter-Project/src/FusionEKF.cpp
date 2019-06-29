@@ -141,7 +141,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 
     if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
     // TODO: Laser updates
-//      ekf_.Update(measurement_pack.raw_measurements_);
+     ekf_.Update(measurement_pack.raw_measurements_);
 
     } else {
     // TODO: Radar updates
