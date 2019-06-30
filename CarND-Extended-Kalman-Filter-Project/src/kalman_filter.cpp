@@ -26,7 +26,7 @@ KalmanFilter::~KalmanFilter() {}
 
 void KalmanFilter::Predict() {
   /**
-   * TODO: predict the state
+   * predict the state
    */
     x_ = F_ * x_;
     MatrixXd Ft = F_.transpose();
@@ -35,7 +35,7 @@ void KalmanFilter::Predict() {
 
 void KalmanFilter::Update(const VectorXd &z) {
   /**
-   * TODO: update the state by using Kalman Filter equations
+   * update the state by using Kalman Filter equations
    */
     VectorXd z_pred = H_laser_ * x_;
     VectorXd y = z - z_pred;
@@ -54,7 +54,7 @@ void KalmanFilter::Update(const VectorXd &z) {
 
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
   /**
-   * TODO: update the state by using Extended Kalman Filter equations
+   * update the state by using Extended Kalman Filter equations
    */
     double rho = sqrt(x_(0) * x_(0) + x_(1) * x_(1));
     double phi = atan2(x_(1), x_(0));
