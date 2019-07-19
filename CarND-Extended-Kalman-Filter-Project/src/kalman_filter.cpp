@@ -64,11 +64,12 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
     }
 
     // To deal with angle express at border
-    if (phi < 0. and z(1) > 0.) {
+    double half_pi = M_PI / 2;
+    if (phi < 0. and z(1) > 0. and fabs(phi) > half_pi and fabs(z(1)) > half_pi) {
         phi += 2 * M_PI;
     }
 
-    if (phi > 0. and z(1) < 0.) {
+    if (phi > 0. and z(1) < 0. and fabs(phi) > half_pi and fabs(z(1)) > half_pi) {
         phi -= 2 * M_PI;
     }
 
