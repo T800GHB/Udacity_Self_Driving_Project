@@ -1,8 +1,8 @@
-###Rubric point
+### Rubric point
 The submitted code could work successfully to navigate Carla around the test track in the Simulator.
 Result video show [here](./demo_video/final.avi)
 
-###How to run
+### How to run
 ```
 cd ros
 catkin_make
